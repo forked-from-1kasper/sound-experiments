@@ -18,11 +18,11 @@ points:
   | POINT* { List.length $1 }
 
 note:
-  | LINE WHOLE     points { { pos = $1; value = lenghten $3 *. 1.0         } }
-  | LINE HALF      points { { pos = $1; value = lenghten $3 *. 1.0 /.  2.0 } }
-  | LINE QUARTER   points { { pos = $1; value = lenghten $3 *. 1.0 /.  4.0 } }
-  | LINE EIGHTH    points { { pos = $1; value = lenghten $3 *. 1.0 /.  8.0 } }
-  | LINE SIXTEENTH points { { pos = $1; value = lenghten $3 *. 1.0 /. 16.0 } }
+  | LINE WHOLE     points { mkNote $1  1.0 $3 }
+  | LINE HALF      points { mkNote $1  2.0 $3 }
+  | LINE QUARTER   points { mkNote $1  4.0 $3 }
+  | LINE EIGHTH    points { mkNote $1  8.0 $3 }
+  | LINE SIXTEENTH points { mkNote $1 16.0 $3 }
 
 pause:
   | RWHOLE     { Pause 1.0           }

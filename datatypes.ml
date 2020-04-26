@@ -31,3 +31,4 @@ type cmdline =
   | Wav of string * string
 
 let lenghten n : float = 2.0 -. (1.0 /. (2.0 ** float_of_int n))
+let mkNote pos frac n = { pos = pos; value = lenghten n *. (1.0 /. frac) }
