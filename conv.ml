@@ -1,17 +1,18 @@
 open Proto
 open Constants
 open Datatypes
+open Accidentals
 
 let extractNotes (xs : stream) =
-  let clef       : clef ref = ref (fun _ -> raise NoClef) in
-  let accidental : int ref  = ref 0 in
+  let clef        : clef ref        = ref (fun _ -> raise NoClef) in
+  let accidentals : accidentals ref = ref Lines.empty in
   let convert : element -> (sound list) option = (function
-    | Chord xs -> Some (List.map (!clef !accidental) xs)
-    | Pause x  -> Some [ Silence x ]
-    | Clef f   -> clef := f; None
-    | Sharp    -> accidental := !accidental + 1; None
-    | Flat     -> accidental := !accidental - 1; None
-    | Natural  -> accidental := 0; None) in
+    | Chord xs  -> Some (List.map (!clef !accidentals) xs)
+    | Pause x   -> Some [ Silence x ]
+    | Clef f    -> clef := f; None
+    | Sharp   x -> accidentals := sharp   !accidentals x; None
+    | Flat    x -> accidentals := flat    !accidentals x; None
+    | Natural x -> accidentals := natural !accidentals x; None) in
   filterMap convert xs
 
 let getValue : sound -> float = function

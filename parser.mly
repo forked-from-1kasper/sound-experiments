@@ -41,12 +41,12 @@ chord:
   | LCURVBRACKET cochord RCURVBRACKET { $2   }
 
 element:
-  | chord   { Chord $1 }
-  | clef    { Clef $1  }
-  | pause   { $1       }
-  | SHARP   { Sharp    }
-  | FLAT    { Flat     }
-  | NATURAL { Natural  }
+  | chord        { Chord $1   }
+  | clef         { Clef $1    }
+  | pause        { $1         }
+  | LINE SHARP   { Sharp $1   }
+  | LINE FLAT    { Flat $1    }
+  | LINE NATURAL { Natural $1 }
 
 stream:
   | element        { [$1]     }
