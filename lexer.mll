@@ -25,4 +25,5 @@ rule main = parse
 | "\xF0\x9D\x94\xBF"  { RSIXTEENTH   }
 | "{"                 { LCURVBRACKET }
 | "}"                 { RCURVBRACKET }
+| "."                 { POINT        }
 | eof                 { EOF          }
