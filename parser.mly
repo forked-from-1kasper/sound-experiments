@@ -7,6 +7,7 @@
 %token RWHOLE RHALF RQUARTER REIGHTH RSIXTEENTH
 %token SHARP FLAT NATURAL
 %token END EOF
+%token LCURVBRACKET RCURVBRACKET
 %token <int> LINE
 
 %start <Datatypes.stream list> file
@@ -31,13 +32,21 @@ clef:
   | G4 { Clef.g4 }
   | F3 { Clef.f3 }
 
+cochord:
+  | note         { [$1]     }
+  | note cochord { $1 :: $2 }
+
+chord:
+  | note                              { [$1] }
+  | LCURVBRACKET cochord RCURVBRACKET { $2   }
+
 element:
-  | note    { Chord [$1] }
-  | clef    { Clef $1    }
-  | pause   { $1         }
-  | SHARP   { Sharp      }
-  | FLAT    { Flat       }
-  | NATURAL { Natural    }
+  | chord   { Chord $1 }
+  | clef    { Clef $1  }
+  | pause   { $1       }
+  | SHARP   { Sharp    }
+  | FLAT    { Flat     }
+  | NATURAL { Natural  }
 
 stream:
   | element        { [$1]     }
