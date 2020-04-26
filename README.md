@@ -11,5 +11,5 @@ $ make
 # Run
 
 ```shell
-$ ./synth.native gamma.synth -o synth.wav
+$ ./synth.native examples/gamma.synth -o synth.wav
 ```
