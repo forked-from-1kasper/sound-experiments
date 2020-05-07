@@ -3,8 +3,9 @@ type note =
     value : float }
 
 type wave =
-  { value : float;
-    freq  : float }
+  { value    : float;
+    freq     : float;
+    loudness : float }
 
 type sound =
   | Wave    of wave
@@ -15,7 +16,7 @@ type chord = note list
 module Lines = Map.Make(struct type t = int let compare = compare end)
 type accidentals = int Lines.t
 
-type clef = accidentals -> note -> sound
+type clef = accidentals -> float -> note -> sound
 
 type element =
   | Chord of chord
@@ -24,6 +25,7 @@ type element =
   | Sharp of int
   | Flat of int
   | Natural of int
+  | Loudness of float
 
 type stream = element list
 

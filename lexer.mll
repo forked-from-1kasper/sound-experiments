@@ -6,9 +6,13 @@ let ws = ['\t' '\r' '\n' ' ']
 let nl = ['\r' '\n']
 let comment = ";"  [^ '\n' '\r']* (nl|eof)
 
+let integer = ['0'-'9']+
+let float   = integer "." integer
+
 rule main = parse
 | ws+|comment { main lexbuf }
 | '-'?['0'-'9']+ as s { LINE (int_of_string s) }
+| float as s          { FLOAT (float_of_string s) }
 | "\xE2\x99\xAF"      { SHARP        }
 | "\xE2\x99\xAD"      { FLAT         }
 | "\xE2\x99\xAE"      { NATURAL      }
