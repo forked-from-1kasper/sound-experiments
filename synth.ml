@@ -6,6 +6,13 @@ open Lexing
 open Constants
 open Datatypes
 
+let help = "Synth notes-to-wav converter
+
+   invoke =   synth | synth list
+     list = command | command list
+  command = <source> -o <output>
+          | -o <output> <source>"
+
 let source : stream list =
   [ [ Clef Clef.g4;
       Chord [ { pos = -1; value = 1.0 } ];
@@ -22,7 +29,7 @@ let source : stream list =
       Chord [ { pos =  1; value = 1.0 } ] ] ]
 
 let rec parseArgs : string list -> cmdline list = function
-  | [] -> []
+  | [] -> [Help]
   | infile :: "-o" :: outfile :: rest ->
     Wav (infile, outfile) :: parseArgs rest
   | "-o" :: outfile :: infile :: rest ->
@@ -34,6 +41,7 @@ let parseErr f lexbuf =
   with Parser.Error -> raise (Proto.Parser (lexeme_start lexbuf, lexeme_end lexbuf))
 
 let cmd : cmdline -> unit = function
+  | Help -> print_endline help
   | Wav (infile, outfile) ->
     let chan = open_in infile in
     let stream = parseErr Parser.file (Lexing.from_channel chan) in
