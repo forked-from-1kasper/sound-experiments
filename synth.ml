@@ -13,28 +13,17 @@ let help = "Synth notes-to-wav converter
   command = <source> -o <output>
           | -o <output> <source>"
 
-let source : stream list =
-  [ [ Clef Clef.g4;
-      Chord [ { pos = -1; value = 1.0 } ];
-      Chord [ { pos =  0; value = 0.5 } ];
-      Chord [ { pos =  1; value = 1.0 } ];
-      Chord [ { pos =  2; value = 0.5 } ];
-      Chord [ { pos =  3; value = 1.0 } ];
-      Chord [ { pos =  4; value = 0.5 } ];
-      Chord [ { pos =  5; value = 1.0 } ];
-      Chord [ { pos =  6; value = 0.5 } ];
-      Pause 1.0 ];
-    [ Clef Clef.f3;
-      Chord [ { pos = -1; value = 1.0 } ];
-      Chord [ { pos =  1; value = 1.0 } ] ] ]
-
 let rec parseArgs : string list -> cmdline list = function
-  | [] -> [Help]
+  | [] -> []
   | infile :: "-o" :: outfile :: rest ->
     Wav (infile, outfile) :: parseArgs rest
   | "-o" :: outfile :: infile :: rest ->
     Wav (infile, outfile) :: parseArgs rest
   | _ -> raise Proto.InvalidArguments
+
+let defaults : cmdline list -> cmdline list = function
+  | [] -> [Help]
+  | xs -> xs
 
 let parseErr f lexbuf =
   try f Lexer.main lexbuf
@@ -57,4 +46,5 @@ let () =
   Array.to_list Sys.argv
   |> List.tl
   |> parseArgs
+  |> defaults
   |> List.iter cmd
