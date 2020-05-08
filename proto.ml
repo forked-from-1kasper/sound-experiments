@@ -31,3 +31,11 @@ let filterMap f =
       | None -> aux accu l
       | Some v -> aux (v :: accu) l
   in aux []
+
+let concatMap f l =
+  let rec aux f acc = function
+    | [] -> List.rev acc
+    | x :: l ->
+       let xs = f x in
+       aux f (List.rev_append xs acc) l
+in aux f [] l

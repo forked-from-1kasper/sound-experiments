@@ -33,10 +33,10 @@ let cmd : cmdline -> unit = function
   | Help -> print_endline help
   | Wav (infile, outfile) ->
     let chan = open_in infile in
-    let stream = parseErr Parser.file (Lexing.from_channel chan) in
+    let file = parseErr Parser.file (Lexing.from_channel chan) in
     close_in chan;
     Printf.printf "Parsed “%s” successfully!\n" infile;
-    let notes = List.map extractNotes stream in
+    let notes = extractSound file in
     let values = initArr notes in
     List.iter (updateArr values) notes;
     Printf.printf "Writing “%s”\n" outfile;

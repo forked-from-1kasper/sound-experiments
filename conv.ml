@@ -7,15 +7,24 @@ let extractNotes (xs : stream) =
   let clef        : clef ref        = ref (fun _ -> raise NoClef) in
   let accidentals : accidentals ref = ref Lines.empty in
   let loudness    : float ref       = ref 1.0 in
-  let convert : element -> (sound list) option = (function
-    | Chord xs   -> Some (List.map (!clef !accidentals !loudness) xs)
-    | Pause x    -> Some [ Silence x ]
-    | Loudness x -> loudness := x; None
-    | Clef f     -> clef := f; None
-    | Sharp   x  -> accidentals := sharp   !accidentals x; None
-    | Flat    x  -> accidentals := flat    !accidentals x; None
-    | Natural x  -> accidentals := natural !accidentals x; None) in
-  filterMap convert xs
+  let convert : element -> (sound list) list = function
+    | Chord xs   -> [ List.map (!clef !accidentals !loudness) xs ]
+    | Pause x    -> [ [ Silence x ] ]
+    | Loudness x -> loudness := x; []
+    | Clef f     -> clef := f; []
+    | Sharp   x  -> accidentals := sharp   !accidentals x; []
+    | Flat    x  -> accidentals := flat    !accidentals x; []
+    | Natural x  -> accidentals := natural !accidentals x; [] in
+  concatMap convert xs
+
+let extractSound (xs : file) =
+  let proc x =
+    match x with
+    | Stream xs -> Some (extractNotes xs)
+    | Speed (note, value) -> 
+      elemSecs := (60.0 /. float_of_int value) *. note;
+      None in
+  filterMap proc xs
 
 let getValue : sound -> float = function
   | Wave { value = x } -> x
@@ -23,7 +32,7 @@ let getValue : sound -> float = function
 
 let totalTicks notes =
   let duration = mapSum (fun xs -> listGetMax getValue xs 0.0
-                                *. noteDurationTicks) notes in
+                                *. elemTick ()) notes in
   int_of_float duration
 
 let soundsToFuncs notes : (float -> float) array =
@@ -36,7 +45,7 @@ let soundsToFuncs notes : (float -> float) array =
   let genWave i xs =
     let delta = !passed in
     waves.(i) <- (fun t -> mapSum (getLoudness delta t) xs);
-    passed := delta +. noteDurationSecs *. listGetMax getValue xs 0.0 in
+    passed := delta +. !elemSecs *. listGetMax getValue xs 0.0 in
   List.iteri genWave notes; waves
 
 let updateArr (xs : float array) ys : unit =

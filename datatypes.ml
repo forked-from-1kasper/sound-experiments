@@ -19,15 +19,21 @@ type accidentals = int Lines.t
 type clef = accidentals -> float -> note -> sound
 
 type element =
-  | Chord of chord
-  | Pause of float
-  | Clef of clef
-  | Sharp of int
-  | Flat of int
-  | Natural of int
+  | Chord    of chord
+  | Pause    of float
+  | Clef     of clef
+  | Sharp    of int
+  | Flat     of int
+  | Natural  of int
   | Loudness of float
 
 type stream = element list
+
+type instr =
+  | Stream of stream
+  | Speed  of float * int
+
+type file = instr list
 
 type cmdline =
   | Wav of string * string
@@ -35,3 +41,4 @@ type cmdline =
 
 let lenghten n : float = 2.0 -. (1.0 /. (2.0 ** float_of_int n))
 let mkNote pos frac n = { pos = pos; value = lenghten n *. (1.0 /. frac) }
+let pause frac = Pause (1.0 /. frac)
