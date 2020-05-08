@@ -28,7 +28,7 @@ rule main = parse
 | "\xF0\x9D\x84\xBC"  { RHALF        }
 | "\xF0\x9D\x84\xBD"  { RQUARTER     }
 | "\xF0\x9D\x84\xBE"  { REIGHTH      }
-| "\xF0\x9D\x94\xBF"  { RSIXTEENTH   }
+| "\xF0\x9D\x84\xBF"  { RSIXTEENTH   }
 | "{"                 { LCURVBRACKET }
 | "}"                 { RCURVBRACKET }
 | "."                 { POINT        }

@@ -27,7 +27,9 @@ let defaults : cmdline list -> cmdline list = function
 
 let parseErr f lexbuf =
   try f Lexer.main lexbuf
-  with Parser.Error -> raise (Proto.Parser (lexeme_start lexbuf, lexeme_end lexbuf))
+  with
+    | Parser.Error -> raise (Proto.Parser (lexeme_start lexbuf, lexeme_end lexbuf))
+    | Failure msg -> raise (Proto.Lexer (lexeme_start lexbuf, lexeme_end lexbuf, msg))
 
 let cmd : cmdline -> unit = function
   | Help -> print_endline help

@@ -1,5 +1,6 @@
 exception InvalidNote of int
 exception Parser of int * int
+exception Lexer of int * int * string
 exception InvalidArguments
 exception NoClef
 
