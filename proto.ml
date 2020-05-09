@@ -7,8 +7,6 @@ exception NoClef
 let pi    = 3.141592653589793
 let tau   = 2.0 *. pi
 
-let eps = 0.00000001
-
 let listGetMax (f : 'a -> 'b) (xs : 'a list) (zero : 'b) : 'b =
   let maximum : 'b ref = ref zero in
   List.iter (fun x -> let v = f x in if v > !maximum then maximum := v else ()) xs;

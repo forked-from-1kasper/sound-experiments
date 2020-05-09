@@ -52,10 +52,10 @@ let updateArr (xs : float array) ys : unit =
   let ticks = totalTicks ys in
   let waves = soundsToFuncs ys in
   for i = 0 to ticks - 1 do
-    let t = float_of_int i /. float_of_int frate in
+    let t = float_of_int i /. float_of_int !frate in
     xs.(i) <- xs.(i) +. Array.fold_left (fun x f -> x +. f t) 0.0 waves;
   done;
-  let maximum = arrayGetMax abs_float xs 0.0 +. eps in
+  let maximum = arrayGetMax abs_float xs 0.0 +. !eps in
   for i = 0 to ticks - 1 do xs.(i) <- xs.(i) /. maximum done
 
 let initArr xs = Array.make (listGetMax totalTicks xs 0) 0.0

@@ -36,7 +36,9 @@ type instr =
 type file = instr list
 
 type cmdline =
-  | Wav of string * string
+  | Wav   of string * string
+  | Frate of int
+  | Eps   of float
   | Help
 
 let lenghten n : float = 2.0 -. (1.0 /. (2.0 ** float_of_int n))

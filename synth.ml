@@ -11,7 +11,9 @@ let help = "Synth notes-to-wav converter
    invoke =   synth | synth list
      list = command | command list
   command = <source> -o <output>
-          | -o <output> <source>"
+          | -o <output> <source>
+          | -frate <int>
+          | -eps <float>"
 
 let rec parseArgs : string list -> cmdline list = function
   | [] -> []
@@ -19,6 +21,10 @@ let rec parseArgs : string list -> cmdline list = function
     Wav (infile, outfile) :: parseArgs rest
   | "-o" :: outfile :: infile :: rest ->
     Wav (infile, outfile) :: parseArgs rest
+  | "-frate" :: value :: rest ->
+    Frate (int_of_string value) :: parseArgs rest
+  | "-eps" :: value :: rest ->
+    Eps (float_of_string value) :: parseArgs rest
   | _ -> raise Proto.InvalidArguments
 
 let defaults : cmdline list -> cmdline list = function
@@ -33,6 +39,8 @@ let parseErr f lexbuf =
 
 let cmd : cmdline -> unit = function
   | Help -> print_endline help
+  | Frate value -> frate := value
+  | Eps value -> eps := value
   | Wav (infile, outfile) ->
     let chan = open_in infile in
     let file = parseErr Parser.file (Lexing.from_channel chan) in
@@ -42,7 +50,7 @@ let cmd : cmdline -> unit = function
     let values = initArr notes in
     List.iter (updateArr values) notes;
     Printf.printf "Writing “%s”\n" outfile;
-    Wav.save ~sampling_bits:16 ~sampling_rate:frate outfile (MONORAL values)
+    Wav.save ~sampling_bits:16 ~sampling_rate:!frate outfile (MONORAL values)
 
 let () =
   Array.to_list Sys.argv
