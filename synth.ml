@@ -49,6 +49,7 @@ let cmd : cmdline -> unit = function
     let notes = extractSound file in
     let values = initArr notes in
     List.iter (updateArr values) notes;
+    normArr values;
     Printf.printf "Writing “%s”\n" outfile;
     Wav.save ~sampling_bits:16 ~sampling_rate:!frate outfile (MONORAL values)
 
