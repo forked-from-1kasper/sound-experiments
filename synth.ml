@@ -15,6 +15,7 @@ let help = "Synth notes-to-wav converter
           | -frate <int>
           | -eps <float>
           | -instrument instr
+          | -note-decay-rate <float>
     instr = piano | sinusoidal"
 
 let rec parseArgs : string list -> cmdline list = function
@@ -29,6 +30,8 @@ let rec parseArgs : string list -> cmdline list = function
     Eps (float_of_string value) :: parseArgs rest
   | "-instrument" :: value :: rest ->
     Instrument value :: parseArgs rest
+  | "-note-decay-rate" :: value :: rest ->
+    NoteDecayRate (float_of_string value) :: parseArgs rest
   | _ -> raise Proto.InvalidArguments
 
 let defaults : cmdline list -> cmdline list = function
@@ -47,6 +50,8 @@ let cmd : cmdline -> unit = function
   | Eps value -> eps := value
   | Instrument name ->
     Wave.instr := Wave.getInstrument name
+  | NoteDecayRate value ->
+    Constants.noteDecayRate := value
   | Wav (infile, outfile) ->
     let chan = open_in infile in
     let file = parseErr Parser.file (Lexing.from_channel chan) in
