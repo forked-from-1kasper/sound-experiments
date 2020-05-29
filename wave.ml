@@ -1,4 +1,5 @@
 open Proto
+open Datatypes
 
 let overtones freq x =
   sin (1.0 *. tau *. freq *. x) *. exp (-0.0004 *. tau *. freq *. x) /. 1.0  +.
@@ -8,7 +9,19 @@ let overtones freq x =
   sin (5.0 *. tau *. freq *. x) *. exp (-0.0004 *. tau *. freq *. x) /. 16.0 +.
   sin (6.0 *. tau *. freq *. x) *. exp (-0.0004 *. tau *. freq *. x) /. 32.0
 
-let piano' freq value x =
-  (overtones freq x ** 3.0) *.
-    (1.0 +. 16.0 *. x *. exp (-6.0 *. value *. x))
-let piano freq value x = if x >= 0.0 then piano' freq value x else 0.0
+let fading freq value x =
+  1.0 +. 16.0 *. x *. exp (-6.0 *. value *. x)
+
+let piano freq value x =
+  (fading freq value x) *. (overtones freq x ** 3.0)
+
+let sinusoidal freq value x =
+  (fading freq value x) *. (sin (tau *. freq *. x))
+
+let getInstrument : string -> instrument = function
+  | "piano"              -> piano
+  | "sin" | "sinusoidal" -> sinusoidal
+  | x                    -> raise (UnknownInstrument x)
+
+let instr = ref piano
+let genSound freq value x = if x >= 0.0 then !instr freq value x else 0.0

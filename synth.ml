@@ -13,7 +13,9 @@ let help = "Synth notes-to-wav converter
   command = <source> -o <output>
           | -o <output> <source>
           | -frate <int>
-          | -eps <float>"
+          | -eps <float>
+          | -instrument instr
+    instr = piano | sinusoidal"
 
 let rec parseArgs : string list -> cmdline list = function
   | [] -> []
@@ -25,6 +27,8 @@ let rec parseArgs : string list -> cmdline list = function
     Frate (int_of_string value) :: parseArgs rest
   | "-eps" :: value :: rest ->
     Eps (float_of_string value) :: parseArgs rest
+  | "-instrument" :: value :: rest ->
+    Instrument value :: parseArgs rest
   | _ -> raise Proto.InvalidArguments
 
 let defaults : cmdline list -> cmdline list = function
@@ -41,6 +45,8 @@ let cmd : cmdline -> unit = function
   | Help -> print_endline help
   | Frate value -> frate := value
   | Eps value -> eps := value
+  | Instrument name ->
+    Wave.instr := Wave.getInstrument name
   | Wav (infile, outfile) ->
     let chan = open_in infile in
     let file = parseErr Parser.file (Lexing.from_channel chan) in

@@ -36,12 +36,13 @@ let totalTicks notes =
   int_of_float duration
 
 let soundsToFuncs notes : (float -> float) array =
-  let waves  : (float -> float) array = Array.make (List.length notes) (fun x -> x) in
+  let waves  : (float -> float) array =
+    Array.make (List.length notes) (fun x -> x) in
   let passed : float ref = ref 0.0 in
   let getLoudness delta t : sound -> float = function
     | Silence _ -> 0.0
     | Wave { freq = freq; value = value; loudness = k } ->
-      k *. Wave.piano freq value (t -. delta) in
+      k *. Wave.genSound freq value (t -. delta) in
   let genWave i xs =
     let delta = !passed in
     waves.(i) <- (fun t -> mapSum (getLoudness delta t) xs);

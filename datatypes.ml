@@ -19,6 +19,7 @@ module Lines = Map.Make(struct type t = int let compare = compare end)
 type accidentals = int Lines.t
 
 type clef = accidentals -> float -> note -> sound
+type instrument = float -> float -> float -> float
 
 type element =
   | Chord    of chord
@@ -38,9 +39,10 @@ type instr =
 type file = instr list
 
 type cmdline =
-  | Wav   of string * string
-  | Frate of int
-  | Eps   of float
+  | Instrument of string
+  | Wav        of string * string
+  | Frate      of int
+  | Eps        of float
   | Help
 
 let lenghten n : float = 2.0 -. (1.0 /. (2.0 ** float_of_int n))

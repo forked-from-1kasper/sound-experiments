@@ -1,9 +1,10 @@
+exception NoClef
+exception EmptyTuplet
+exception InvalidArguments
 exception InvalidNote of int
 exception Parser of int * int
 exception Lexer of int * int * string
-exception InvalidArguments
-exception EmptyTuplet
-exception NoClef
+exception UnknownInstrument of string
 
 let pi    = 3.141592653589793
 let tau   = 2.0 *. pi
