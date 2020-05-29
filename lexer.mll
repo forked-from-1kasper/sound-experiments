@@ -31,6 +31,8 @@ rule main = parse
 | "\xF0\x9D\x84\xBF"  { RSIXTEENTH   }
 | "{"                 { LCURVBRACKET }
 | "}"                 { RCURVBRACKET }
+| "["                 { LSQBRACKET   }
+| "]"                 { RSQBRACKET   }
 | "."                 { POINT        }
 | "="                 { DEFEQ        }
 | eof                 { EOF          }

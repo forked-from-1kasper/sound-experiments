@@ -1,3 +1,5 @@
+open Proto
+
 type note =
   { pos   : int;
     value : float }
@@ -42,5 +44,20 @@ type cmdline =
   | Help
 
 let lenghten n : float = 2.0 -. (1.0 /. (2.0 ** float_of_int n))
-let mkNote pos frac n = { pos = pos; value = lenghten n *. (1.0 /. frac) }
+let value frac n = lenghten n *. (1.0 /. frac)
+
+let mkNote pos frac n = { pos = pos; value = value frac n }
 let pause frac = Pause (1.0 /. frac)
+
+let ratio : int -> float = function
+  | 0 -> raise EmptyTuplet
+  | 1 -> 1.0
+  | 2 -> 3.0
+  | n -> float_of_int (n - 1)
+
+let tuplet (xs : int list) frac n =
+  let count = List.length xs in
+  let src   = value frac n in
+  let total = src *. ratio count in
+  let value = total /. float_of_int count in
+  List.map (fun x -> Chord [{ pos = x; value = value }]) xs

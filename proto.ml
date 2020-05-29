@@ -2,6 +2,7 @@ exception InvalidNote of int
 exception Parser of int * int
 exception Lexer of int * int * string
 exception InvalidArguments
+exception EmptyTuplet
 exception NoClef
 
 let pi    = 3.141592653589793

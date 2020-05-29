@@ -7,6 +7,7 @@
 %token RWHOLE RHALF RQUARTER REIGHTH RSIXTEENTH
 %token POINT SHARP FLAT NATURAL
 %token DEFEQ END EOF
+%token LSQBRACKET RSQBRACKET
 %token LCURVBRACKET RCURVBRACKET
 %token <int> INT
 %token <float> FLOAT
@@ -43,22 +44,27 @@ cochord:
   | elem         { [$1]     }
   | elem cochord { $1 :: $2 }
 
+ints:
+  | INT      { [$1]     }
+  | INT ints { $1 :: $2 }
+
 chord:
-  | elem                              { [$1] }
-  | LCURVBRACKET cochord RCURVBRACKET { $2   }
+  | elem                                   { [$1]            }
+  | LCURVBRACKET cochord RCURVBRACKET      { $2              }
 
 element:
-  | chord        { Chord $1    }
-  | clef         { Clef $1     }
-  | pause        { $1          }
-  | FLOAT        { Loudness $1 }
-  | INT SHARP    { Sharp $1    }
-  | INT FLAT     { Flat $1     }
-  | INT NATURAL  { Natural $1  }
+  | chord                                  { [Chord $1]      }
+  | LSQBRACKET ints RSQBRACKET note points { tuplet $2 $4 $5 }
+  | clef                                   { [Clef $1]       }
+  | pause                                  { [$1]            }
+  | FLOAT                                  { [Loudness $1]   }
+  | INT SHARP                              { [Sharp $1]      }
+  | INT FLAT                               { [Flat $1]       }
+  | INT NATURAL                            { [Natural $1]    }
 
 stream:
-  | element        { [$1]     }
-  | element stream { $1 :: $2 }
+  | element        { $1      }
+  | element stream { $1 @ $2 }
 
 file:
   | EOF                 { []                   }
