@@ -11,7 +11,7 @@ let float   = integer "." integer
 
 rule main = parse
 | ws+|comment { main lexbuf }
-| '-'?['0'-'9']+ as s { INT (int_of_string s) }
+| '-'? integer as s   { INT (int_of_string s) }
 | float as s          { FLOAT (float_of_string s) }
 | "\xE2\x99\xAF"      { SHARP        }
 | "\xE2\x99\xAD"      { FLAT         }
@@ -33,6 +33,8 @@ rule main = parse
 | "}"                 { RCURVBRACKET }
 | "["                 { LSQBRACKET   }
 | "]"                 { RSQBRACKET   }
+| "("                 { LBRACKET     }
+| ")"                 { RBRACKET     }
 | "."                 { POINT        }
 | "="                 { DEFEQ        }
 | eof                 { EOF          }

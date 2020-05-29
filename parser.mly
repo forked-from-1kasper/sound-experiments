@@ -7,6 +7,7 @@
 %token RWHOLE RHALF RQUARTER REIGHTH RSIXTEENTH
 %token POINT SHARP FLAT NATURAL
 %token DEFEQ END EOF
+%token LBRACKET RBRACKET
 %token LSQBRACKET RSQBRACKET
 %token LCURVBRACKET RCURVBRACKET
 %token <int> INT
@@ -52,15 +53,26 @@ chord:
   | elem                                   { [$1]            }
   | LCURVBRACKET cochord RCURVBRACKET      { $2              }
 
+couple:
+  | INT                            { [$1] }
+  | LCURVBRACKET ints RCURVBRACKET { $2   }
+
+couples:
+  | couple         { [$1]     }
+  | couple couples { $1 :: $2 }
+
 element:
-  | chord                                  { [Chord $1]      }
-  | LSQBRACKET ints RSQBRACKET note points { tuplet $2 $4 $5 }
-  | clef                                   { [Clef $1]       }
-  | pause                                  { [$1]            }
-  | FLOAT                                  { [Loudness $1]   }
-  | INT SHARP                              { [Sharp $1]      }
-  | INT FLAT                               { [Flat $1]       }
-  | INT NATURAL                            { [Natural $1]    }
+  | LSQBRACKET couples RSQBRACKET note points
+    { tuplet $2 $4 $5 }
+  | LBRACKET   couples RBRACKET   note points
+    { beam   $2 $4 $5 }
+  | chord       { [Chord $1]      }
+  | clef        { [Clef $1]       }
+  | pause       { [$1]            }
+  | FLOAT       { [Loudness $1]   }
+  | INT SHARP   { [Sharp $1]      }
+  | INT FLAT    { [Flat $1]       }
+  | INT NATURAL { [Natural $1]    }
 
 stream:
   | element        { $1      }

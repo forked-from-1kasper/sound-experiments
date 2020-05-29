@@ -57,9 +57,15 @@ let ratio : int -> float = function
   | 2 -> 3.0
   | n -> float_of_int (n - 1)
 
-let tuplet (xs : int list) frac n =
+let chord value xs = Chord (List.map (fun x -> { pos = x; value = value }) xs)
+
+let beam xs frac n =
+  let value = value frac n in
+  List.map (chord value) xs
+
+let tuplet xs frac n =
   let count = List.length xs in
   let src   = value frac n in
   let total = src *. ratio count in
   let value = total /. float_of_int count in
-  List.map (fun x -> Chord [{ pos = x; value = value }]) xs
+  List.map (chord value) xs
