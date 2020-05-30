@@ -25,8 +25,7 @@ let getInstrument : string -> instrument = function
 
 let instr = ref piano
 let genSound freq value x =
-  if x < 0.0 then 0.0
-  else let f = !instr freq value x in
-  if x >= value then
-    f /. exp (!Constants.noteDecayRate *. (x -. value))
-  else f
+  if x < 0.0 then 0.0 else
+  let f = !instr freq value x in
+  let lim = value *. !Constants.elemSecs in
+  if x >= lim then f /. exp (!Constants.noteDecayRate *. (x -. lim)) else f

@@ -4,7 +4,9 @@
 
 %token G4 F3
 %token WHOLE  HALF  QUARTER  EIGHTH  SIXTEENTH
+%token THIRTYSECOND SIXTYFOURTH TWENTYEIGHTH
 %token RWHOLE RHALF RQUARTER REIGHTH RSIXTEENTH
+%token RTHIRTYSECOND RSIXTYFOURTH RTWENTYEIGHTH
 %token POINT SHARP FLAT NATURAL
 %token DEFEQ END EOF
 %token LBRACKET RBRACKET
@@ -21,21 +23,27 @@ points:
   | POINT* { List.length $1 }
 
 note:
-  | WHOLE     {  1.0 }
-  | HALF      {  2.0 }
-  | QUARTER   {  4.0 }
-  | EIGHTH    {  8.0 }
-  | SIXTEENTH { 16.0 }
+  | WHOLE        {   1.0 }
+  | HALF         {   2.0 }
+  | QUARTER      {   4.0 }
+  | EIGHTH       {   8.0 }
+  | SIXTEENTH    {  16.0 }
+  | THIRTYSECOND {  32.0 }
+  | SIXTYFOURTH  {  64.0 }
+  | TWENTYEIGHTH { 128.0 }
 
 elem:
   | INT note points { mkNote $1 $2 $3 }
 
 pause:
-  | RWHOLE     { pause  1.0 }
-  | RHALF      { pause  2.0 }
-  | RQUARTER   { pause  4.0 }
-  | REIGHTH    { pause  8.0 }
-  | RSIXTEENTH { pause 16.0 }
+  | RWHOLE        { pause   1.0 }
+  | RHALF         { pause   2.0 }
+  | RQUARTER      { pause   4.0 }
+  | REIGHTH       { pause   8.0 }
+  | RSIXTEENTH    { pause  16.0 }
+  | RTHIRTYSECOND { pause  32.0 }
+  | RSIXTYFOURTH  { pause  64.0 }
+  | RTWENTYEIGHTH { pause 128.0 }
 
 clef:
   | G4 { Clef.g4 }
