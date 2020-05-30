@@ -56,13 +56,16 @@ let cmd : cmdline -> unit = function
     let chan = open_in infile in
     let file = parseErr Parser.file (Lexing.from_channel chan) in
     close_in chan;
-    Printf.printf "Parsed “%s” successfully!\n" infile;
+    Printf.printf "Parsed “%s” successfully!\n" infile; flush_all ();
     let notes = extractSound file in
     let values = initArr notes in
+    print_endline "Compiling..."; flush_all ();
     List.iter (updateArr values) notes;
+    print_endline "Normalizing..."; flush_all ();
     normArr values;
-    Printf.printf "Writing “%s”\n" outfile;
-    Wav.save ~sampling_bits:16 ~sampling_rate:!frate outfile (MONORAL values)
+    Printf.printf "Writing “%s”...\n" outfile; flush_all ();
+    Wav.save ~sampling_bits:16 ~sampling_rate:!frate outfile (MONORAL values);
+    print_endline "Done!"
 
 let () =
   Array.to_list Sys.argv
