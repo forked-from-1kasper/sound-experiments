@@ -22,7 +22,12 @@ let g4 accidentals loudness (x : note) : sound =
   let interval   = 2.0 ** (float_of_int semitone /. 12.0) in
   Wave { value = x.value; freq = 261.63 *. interval; loudness = loudness }
 
-let f3 accidental loudness (x : note) : sound =
+let f3 accidental loudness x =
   g4 accidental loudness
      { pos   = x.pos - 12;
+       value = x.value }
+
+let c4 accidental loudness x =
+  g4 accidental loudness
+     { pos   = x.pos - 6;
        value = x.value }

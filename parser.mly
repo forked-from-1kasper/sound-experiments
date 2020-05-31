@@ -2,7 +2,7 @@
   open Datatypes
 %}
 
-%token G4 F3
+%token G4 F3 C4
 %token WHOLE  HALF  QUARTER  EIGHTH  SIXTEENTH
 %token THIRTYSECOND SIXTYFOURTH TWENTYEIGHTH
 %token RWHOLE RHALF RQUARTER REIGHTH RSIXTEENTH
@@ -48,6 +48,7 @@ pause:
 clef:
   | G4 { Clef.g4 }
   | F3 { Clef.f3 }
+  | C4 { Clef.c4 }
 
 cochord:
   | elem         { [$1]     }
