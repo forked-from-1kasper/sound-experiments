@@ -12,6 +12,7 @@
 %token LBRACKET RBRACKET
 %token LSQBRACKET RSQBRACKET
 %token LCURVBRACKET RCURVBRACKET
+%token MINUS HF
 %token <int> INT
 %token <float> FLOAT
 
@@ -32,8 +33,14 @@ value:
   | SIXTYFOURTH  {  64.0 }
   | TWENTYEIGHTH { 128.0 }
 
+line:
+  |       INT    {   $1 * 2 - 1  } (*   0 ⇒ -1 |   1 ⇒ 1  |   2 ⇒  3 *)
+  | MINUS INT    { -($2 * 2 + 1) } (*  -0 ⇒ -1 |  -1 ⇒ -3 |  -2 ⇒ -5 *)
+  |       INT HF {   $1 * 2      } (*  0½ ⇒ 0  |  1½ ⇒ 2  |  2½ ⇒ 4 *)
+  | MINUS INT HF { -($2 * 2) - 2 } (* -0½ ⇒ -2 | -1½ ⇒ -4 | -2½ ⇒ -6 *)
+
 elem:
-  | INT value points { mkNote $1 $2 $3 }
+  | line value points { mkNote $1 $2 $3 }
 
 pause:
   | RWHOLE        { pause   1.0 }
@@ -54,17 +61,17 @@ cochord:
   | elem         { [$1]     }
   | elem cochord { $1 :: $2 }
 
-ints:
-  | INT      { [$1]     }
-  | INT ints { $1 :: $2 }
+lines:
+  | line       { [$1]     }
+  | line lines { $1 :: $2 }
 
 chord:
-  | elem                                   { [$1]            }
-  | LCURVBRACKET cochord RCURVBRACKET      { $2              }
+  | elem                                   { [$1] }
+  | LCURVBRACKET cochord RCURVBRACKET      { $2   }
 
 couple:
-  | INT                            { [$1] }
-  | LCURVBRACKET ints RCURVBRACKET { $2   }
+  | line                            { [$1] }
+  | LCURVBRACKET lines RCURVBRACKET { $2   }
 
 couples:
   | couple         { [$1]     }
@@ -72,17 +79,17 @@ couples:
 
 element:
   | LSQBRACKET couples RSQBRACKET value points
-    { tuplet $2 $4 $5 }
+                 { tuplet $2 $4 $5 }
   | LBRACKET   couples RBRACKET   value points
-    { beam   $2 $4 $5 }
-  | chord       { [Chord $1]      }
-  | clef        { [Clef $1]       }
-  | pause       { [$1]            }
-  | FLOAT       { [Loudness $1]   }
-  | INT SHARP   { [Sharp $1]      }
-  | INT FLAT    { [Flat $1]       }
-  | INT NATURAL { [Natural $1]    }
-  | BARLINE     { [Barline] }
+                 { beam   $2 $4 $5 }
+  | chord        { [Chord $1]      }
+  | clef         { [Clef $1]       }
+  | pause        { [$1]            }
+  | FLOAT        { [Loudness $1]   }
+  | line SHARP   { [Sharp $1]      }
+  | line FLAT    { [Flat $1]       }
+  | line NATURAL { [Natural $1]    }
+  | BARLINE      { [Barline]       }
 
 stream:
   | element        { $1      }

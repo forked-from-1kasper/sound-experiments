@@ -15,23 +15,23 @@ Now we can generate some .wav-file.
 For example, the following code:
 
 ```
-𝄞 -1𝅗𝅥 0𝅗𝅥 1𝅗𝅥 2𝅗𝅥 3𝅗𝅥 4𝅗𝅥 5𝅗𝅥 6𝅗𝅥 𝄽 5♩ 4♩ 3♩ 2♩ 1♩ 0♩ -1♩ ·
+𝄞 0𝅗𝅥 0½𝅗𝅥 1𝅗𝅥 1½𝅗𝅥 2𝅗𝅥 2½𝅗𝅥 3𝅗𝅥 3½𝅗𝅥 𝄽 3♩ 2½♩ 2♩ 1½♩ 1♩ 0½♩ 0♩ ·
 ```
 
 Corresponds to the following notes:
 
 ![ABC](pictures/abc.png)
 
-In `-1𝅗𝅥`:
+In `0½𝅗𝅥`:
 
-* Number denotes position on the stave: `1` is first line, `2` is space between first line and second line, `3` is second line etc.
+* Number denotes position on the stave: `1` is first line, `1½` is space between first line and second line, `2` is second line etc.
 
 * Symbol denotes note value.
 
 To compile it, we first need to save it:
 
 ```shell
-$ echo "-1𝅗𝅥 0𝅗𝅥 1𝅗𝅥 2𝅗𝅥 3𝅗𝅥 4𝅗𝅥 5𝅗𝅥 6𝅗𝅥 𝄽 5♩ 4♩ 3♩ 2♩ 1♩ 0♩ -1♩ ·" > abc.synth
+$ echo "𝄞 0𝅗𝅥 0½𝅗𝅥 1𝅗𝅥 1½𝅗𝅥 2𝅗𝅥 2½𝅗𝅥 3𝅗𝅥 3½𝅗𝅥 𝄽 3♩ 2½♩ 2♩ 1½♩ 1♩ 0½♩ 0♩ ·" > abc.synth
 ```
 
 Then run `synth`:
