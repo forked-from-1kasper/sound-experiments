@@ -15,7 +15,7 @@ Now we can generate some .wav-file.
 For example, the following code:
 
 ```
-𝄞 0𝅗𝅥 0½𝅗𝅥 1𝅗𝅥 1½𝅗𝅥 2𝅗𝅥 2½𝅗𝅥 3𝅗𝅥 3½𝅗𝅥 𝄽 3♩ 2½♩ 2♩ 1½♩ 1♩ 0½♩ 0♩ ·
+𝄞 0𝅗𝅥 0½𝅗𝅥 1𝅗𝅥 1½𝅗𝅥 2𝅗𝅥 2½𝅗𝅥 3𝅗𝅥 𝄽 2½♩ 2♩ 1½♩ 1♩ 0½♩ 0♩ ·
 ```
 
 Corresponds to the following notes:
