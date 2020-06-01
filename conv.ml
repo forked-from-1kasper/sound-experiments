@@ -14,7 +14,8 @@ let extractNotes (xs : stream) =
     | Clef f     -> clef := f; []
     | Sharp   x  -> accidentals := sharp   !accidentals x; []
     | Flat    x  -> accidentals := flat    !accidentals x; []
-    | Natural x  -> accidentals := natural !accidentals x; [] in
+    | Natural x  -> accidentals := natural !accidentals x; []
+    | Barline    -> accidentals := Lines.empty; [] in
   concatMap convert xs
 
 let extractSound (xs : file) =

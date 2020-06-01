@@ -28,6 +28,7 @@ type element =
   | Sharp    of int
   | Flat     of int
   | Natural  of int
+  | Barline
   | Loudness of float
 
 type stream = element list

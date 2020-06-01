@@ -7,7 +7,7 @@
 %token THIRTYSECOND SIXTYFOURTH TWENTYEIGHTH
 %token RWHOLE RHALF RQUARTER REIGHTH RSIXTEENTH
 %token RTHIRTYSECOND RSIXTYFOURTH RTWENTYEIGHTH
-%token POINT SHARP FLAT NATURAL
+%token POINT SHARP FLAT NATURAL BARLINE
 %token DEFEQ END EOF
 %token LBRACKET RBRACKET
 %token LSQBRACKET RSQBRACKET
@@ -22,7 +22,7 @@
 points:
   | POINT* { List.length $1 }
 
-note:
+value:
   | WHOLE        {   1.0 }
   | HALF         {   2.0 }
   | QUARTER      {   4.0 }
@@ -33,7 +33,7 @@ note:
   | TWENTYEIGHTH { 128.0 }
 
 elem:
-  | INT note points { mkNote $1 $2 $3 }
+  | INT value points { mkNote $1 $2 $3 }
 
 pause:
   | RWHOLE        { pause   1.0 }
@@ -71,9 +71,9 @@ couples:
   | couple couples { $1 :: $2 }
 
 element:
-  | LSQBRACKET couples RSQBRACKET note points
+  | LSQBRACKET couples RSQBRACKET value points
     { tuplet $2 $4 $5 }
-  | LBRACKET   couples RBRACKET   note points
+  | LBRACKET   couples RBRACKET   value points
     { beam   $2 $4 $5 }
   | chord       { [Chord $1]      }
   | clef        { [Clef $1]       }
@@ -82,12 +82,13 @@ element:
   | INT SHARP   { [Sharp $1]      }
   | INT FLAT    { [Flat $1]       }
   | INT NATURAL { [Natural $1]    }
+  | BARLINE     { [Barline] }
 
 stream:
   | element        { $1      }
   | element stream { $1 @ $2 }
 
 file:
-  | EOF                 { []                   }
-  | note DEFEQ INT file { Speed ($1, $3) :: $4 }
-  | stream END file     { Stream $1 :: $3      }
+  | EOF                  { []                   }
+  | value DEFEQ INT file { Speed ($1, $3) :: $4 }
+  | stream END file      { Stream $1 :: $3      }

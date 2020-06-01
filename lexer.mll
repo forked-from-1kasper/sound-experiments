@@ -16,6 +16,7 @@ rule main = parse
 | "\xE2\x99\xAF"      { SHARP         }
 | "\xE2\x99\xAD"      { FLAT          }
 | "\xE2\x99\xAE"      { NATURAL       }
+| "\xF0\x9D\x84\x80"  { BARLINE       }
 | "\xF0\x9D\x84\x9E"  { G4            }
 | "\xF0\x9D\x84\xA2"  { F3            }
 | "\xF0\x9D\x84\xA1"  { C4            }
